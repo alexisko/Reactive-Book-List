@@ -17,11 +17,12 @@ class App extends Component {
     };
 
     getBooksFromFakeXHR()
-      .then( books => {
+      .then(books => {
+        console.log(books);
         this.setState({
           books: books
         });
-      }).catch( err => {
+      }).catch(err => {
         console.log(err);
       });
   }
@@ -32,29 +33,37 @@ class App extends Component {
     });
   }
 
-  addNewBook(title, author) {
-    console.log(title + author);
+  addNewBook(book) {
+    addBookToFakeXHR(book)
+      .then(book => {
+        this.setState({
+          books: this.state.books
+        });
+      }).catch(err => {
+        console.log(err);
+      });
   }
 
   render() {
     return (
-      <div>
+      <div className="main-container">
         <BookListAppTitle
-          title="BOOKS"
+          title="BOOK.app"
         />
+        <div className="books-container">
+          <BookFilterInput
+            filterInputChange={this.handleFilterInputChange.bind(this)}
+          />
 
-        <BookFilterInput
-          filterInputChange={this.handleFilterInputChange.bind(this)}
-        />
+          <BookList
+            filter={this.state.bookFilterText}
+            books={this.state.books}
+          />
 
-        <BookList
-          filter={this.state.bookFilterText}
-          books={this.state.books}
-        />
-
-        <NewBookForm
-          addNewBook={this.addNewBook.bind(this)}
-        />
+          <NewBookForm
+            addNewBook={this.addNewBook.bind(this)}
+          />
+        </div>
       </div>
     );
   }
